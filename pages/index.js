@@ -17,7 +17,7 @@ export default () => {
       <Head>
         <title>Welcome to Sales Order</title>
       </Head>
-      <h1>Next.js, FaunaDB and Node.js</h1>
+      <h1>Welcome to Sales Order</h1>
       <hr />
       <div className="container-scroll">
         <div className="container">
