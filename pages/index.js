@@ -1,165 +1,135 @@
-import Head from 'next/head'
+import { useEffect, useState } from "react";
+import Head from "next/head";
+import TableRow from "../components/TableRow";
 
-export default function Home() {
+export default () => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    async function getData() {
+      const res = await fetch("/api");
+      const newData = await res.json();
+      setData(newData);
+    }
+    getData();
+  }, []);
   return (
-    <div className="container">
+    <main>
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Welcome to Sales Order</title>
       </Head>
-
-      <main>
-        <h1 className="title">
-          Welcome to Sales Order
-        </h1>
-      </main>
-
+      <h1>Next.js, FaunaDB and Node.js</h1>
+      <hr />
+      <div className="container-scroll">
+        <div className="container">
+          <h2>Customer Data</h2>
+          <div className="table">
+            <h4>name</h4>
+            <h4 className="telephone">telephone</h4>
+            <h4 className="credit-card">credit card</h4>
+          </div>
+          {data.length > 0 ? (
+            data.map(d => (
+              <TableRow
+                key={d.data.telephone}
+                creditCard={d.data.creditCard.number}
+                firstName={d.data.firstName}
+                lastName={d.data.lastName}
+                telephone={d.data.telephone}
+              />
+            ))
+          ) : (
+            <>
+              <TableRow loading />
+              <TableRow loading />
+              <TableRow loading />
+            </>
+          )}
+        </div>
+      </div>
 
       <style jsx>{`
-        .container {
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
         main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
+          font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue",
+            "Helvetica", "Arial", sans-serif;
+          padding: 20px 20px 60px;
+          max-width: 640px;
+          margin: 0 auto;
+          font-size: 16px;
+          line-height: 1.65;
         }
-
-        footer {
-          width: 100%;
-          height: 100px;
+        header {
+          height: 152px;
+          margin-top: 3em;
+        }
+        img {
+          height: 48px;
+          margin-right: 8px;
+          width: 48px;
+        }
+        img.loading {
+          background: #eaeaea;
+          border-radius: 50%;
+        }
+        hr {
+          border: none;
           border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          margin-bottom: 48px;
         }
-
-        footer img {
-          margin-left: 0.5rem;
+        h1 {
+          font-size: 1.5em;
+          font-weight: 500;
         }
-
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        a {
-          color: inherit;
-          text-decoration: none;
-        }
-
-        .title a {
-          color: #0070f3;
-          text-decoration: none;
-        }
-
-        .title a:hover,
-        .title a:focus,
-        .title a:active {
-          text-decoration: underline;
-        }
-
-        .title {
+        h2 {
+          font-size: 16px;
+          font-weight: 700;
           margin: 0;
-          line-height: 1.15;
-          font-size: 4rem;
+          padding: 0 32px;
         }
-
-        .title,
-        .description {
-          text-align: center;
-        }
-
-        .description {
-          line-height: 1.5;
-          font-size: 1.5rem;
-        }
-
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-            DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-        }
-
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-
-          max-width: 800px;
-          margin-top: 3rem;
-        }
-
-        .card {
-          margin: 1rem;
-          flex-basis: 45%;
-          padding: 1.5rem;
+        h4 {
+          color: #666666;
+          font-size: 12px;
+          font-weight: 400;
           text-align: left;
-          color: inherit;
-          text-decoration: none;
+          text-transform: uppercase;
+        }
+        .container-scroll {
+          overflow: scroll;
+        }
+        .container {
           border: 1px solid #eaeaea;
-          border-radius: 10px;
-          transition: color 0.15s ease, border-color 0.15s ease;
+          border-radius: 4px;
+          min-width: 512px;
+          overflow: scroll;
+          padding-top: 24px;
         }
-
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
+        .table {
+          display: grid;
+          grid-auto-flow: column;
+          grid-template-columns: 3fr 3fr 4fr;
+          padding: 0 32px;
         }
-
-        .card h3 {
-          margin: 0 0 1rem 0;
-          font-size: 1.5rem;
+        .credit-card {
+          margin-left: auto;
         }
-
-        .card p {
-          margin: 0;
-          font-size: 1.25rem;
-          line-height: 1.5;
+        @media screen and (max-width: 580px) {
+          main {
+            font-size: 14px;
+          }
+          header {
+            height: 9em;
+          }
+          h2,
+          .table {
+            padding: 0 16px;
+          }
         }
-
-        .logo {
-          height: 1em;
-        }
-
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
+        @media screen and (max-width: 474px) {
+          main {
+            font-size: 12px;
+            padding: 4px;
           }
         }
       `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
-    </div>
-  )
-}
+    </main>
+  );
+};
